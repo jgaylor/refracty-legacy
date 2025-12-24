@@ -1,3 +1,39 @@
+# Next.js + Supabase starter
+
+Minimal full-stack starter using Next.js (App Router, TypeScript), Tailwind CSS, Supabase, and Vercel.
+
+## What it does
+
+- Fetches a greeting from Supabase
+- Renders it dynamically in Next.js
+- Auto-deploys via GitHub → Vercel
+
+## Local setup
+
+1. Install dependencies  
+   npm install
+
+2. Create `.env.local`  
+   NEXT_PUBLIC_SUPABASE_URL=your_url  
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+3. Run locally  
+   npm run dev
+
+## Supabase
+
+- Table: `greetings`
+- Columns: `id`, `message`, `created_at`
+- RLS enabled with public SELECT policy
+
+## Deployment
+
+- Push to GitHub
+- Vercel auto-deploys
+- Same env vars must be set in Vercel
+
+Previous content (probably can remove)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
