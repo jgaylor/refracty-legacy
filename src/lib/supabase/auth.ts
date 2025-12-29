@@ -6,7 +6,7 @@ import type { User } from "@supabase/supabase-js";
  * @returns The user object if authenticated, null otherwise
  */
 export async function getUser(): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -18,7 +18,7 @@ export async function getUser(): Promise<User | null> {
  * @returns The session object if authenticated, null otherwise
  */
 export async function getSession() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();

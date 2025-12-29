@@ -1,0 +1,58 @@
+{"location":"server.ts:5","message":"cookies() return type check","data":{"isPromise":true,"constructorName":"Promise","hasGetAll":false,"hasThen":true},"timestamp":1766766387975,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:7","message":"cookieStore type after assertion","data":{"hasGetAll":false,"hasSet":false,"type":"object"},"timestamp":1766766387977,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":false},"timestamp":1766766387997,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":false},"timestamp":1766766388025,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":false},"timestamp":1766766388027,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":false},"timestamp":1766766388033,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() return type check","data":{"isPromise":true,"constructorName":"Promise","hasGetAll":false,"hasThen":true},"timestamp":1766766466594,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await check","data":{"hasGetAll":true,"hasSet":true,"type":"object","constructorName":"bound RequestCookies"},"timestamp":1766766466607,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766466609,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766466614,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766466622,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766495682,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766495736,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766495738,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766495744,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766495746,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766497780,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766497810,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766497812,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766497818,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766497821,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766497824,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766544498,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766544546,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766544548,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766544554,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766544557,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766544559,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766546799,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766546814,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766546815,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766546823,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766546828,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766546831,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766551135,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766551148,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766551149,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766551157,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766551163,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766551166,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766728990,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766729037,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766729039,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766729045,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766729049,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766729051,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766730958,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766730970,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766730971,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766730979,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766730983,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766730986,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:5","message":"cookies() called","data":{"isPromise":true},"timestamp":1766766733634,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"server.ts:8","message":"cookieStore after await","data":{"hasGetAll":true,"hasSet":true},"timestamp":1766766733647,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766733648,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766733656,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766733659,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"server.ts:15","message":"getAll() called","data":{"cookieStoreType":"object","hasGetAll":true},"timestamp":1766766733662,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
