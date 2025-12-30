@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Person, Note } from '@/lib/supabase/people';
 import { Insight } from '@/lib/supabase/insights';
 import { PersonHeader } from './PersonHeader';
@@ -20,6 +20,11 @@ export function PersonDetailClient({
 }: PersonDetailClientProps) {
   const [activeTab, setActiveTab] = useState<'insights' | 'notes'>('insights');
   const [notesCount, setNotesCount] = useState(initialNotes.length);
+
+  // Sync notesCount with initialNotes when it changes (e.g., after router.refresh from InsightCapture)
+  useEffect(() => {
+    setNotesCount(initialNotes.length);
+  }, [initialNotes.length]);
 
   return (
     <div>

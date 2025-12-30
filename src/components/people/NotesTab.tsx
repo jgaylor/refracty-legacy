@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Note } from '@/lib/supabase/people';
 import { InsightCategory } from '@/lib/supabase/insights';
@@ -38,6 +38,21 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const router = useRouter();
 
+  // Sync notes with initialNotes when it changes, but preserve optimistic updates
+  useEffect(() => {
+    // Only sync if initialNotes has significantly more items (likely a server refresh)
+    // This prevents overwriting optimistic updates but allows syncing after navigation
+    const currentNoteIds = new Set(notes.map(n => n.id));
+    const initialNoteIds = new Set(initialNotes.map(n => n.id));
+    
+    // If initialNotes has notes that aren't in current state, sync
+    const hasNewNotes = initialNotes.some(note => !currentNoteIds.has(note.id));
+    if (hasNewNotes && initialNotes.length >= notes.length) {
+      setNotes(initialNotes);
+      onNotesChange?.(initialNotes.length);
+    }
+  }, [initialNotes, notes, onNotesChange]);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const month = date.getMonth() + 1;
@@ -68,13 +83,11 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
       const result = await response.json();
 
       if (response.ok && result.success) {
-        setNotes((prev) => {
-          const updated = [result.note, ...prev];
-          onNotesChange?.(updated.length);
-          return updated;
-        });
+        const updated = [result.note, ...notes];
+        setNotes(updated);
+        onNotesChange?.(updated.length);
         setNewNoteContent('');
-        router.refresh();
+        showSuccessToast('Note added');
       } else {
         throw new Error(result.error || 'Failed to add note');
       }

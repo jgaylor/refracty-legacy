@@ -137,6 +137,48 @@ export async function getNotesByPerson(personId: string): Promise<Note[]> {
 }
 
 /**
+ * Update a person
+ */
+export async function updatePerson(
+  id: string,
+  updates: { name?: string; vibe_summary?: string | null }
+): Promise<{ success: boolean; person?: Person; error?: string }> {
+  const user = await getUser();
+  if (!user) {
+    return { success: false, error: 'User not authenticated' };
+  }
+
+  const supabase = await createClient();
+  
+  const updateData: any = {
+    updated_at: new Date().toISOString(),
+  };
+  
+  if (updates.name !== undefined) {
+    updateData.name = updates.name.trim();
+  }
+  
+  if (updates.vibe_summary !== undefined) {
+    updateData.vibe_summary = updates.vibe_summary?.trim() || null;
+  }
+
+  const { data, error } = await supabase
+    .from('people')
+    .update(updateData)
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating person:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, person: data };
+}
+
+/**
  * Create a new person and optionally a first note
  */
 export async function createPerson(

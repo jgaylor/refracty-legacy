@@ -53,11 +53,6 @@ export function PeopleList({ people, onPersonClick, onDeleteClick }: PeopleListP
                     {person.vibe_summary}
                   </p>
                 )}
-                {person.first_note && (
-                  <p className="text-sm mt-2 italic" style={{ color: 'var(--text-tertiary)' }}>
-                    {person.first_note.content}
-                  </p>
-                )}
               </div>
 
               {/* Delete Button */}
