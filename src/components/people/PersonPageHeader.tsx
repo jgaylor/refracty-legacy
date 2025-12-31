@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageHeader, type PageAction } from '@/components/PageHeader';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { useMobileHeader } from '@/components/MobileHeaderProvider';
 
 interface PersonPageHeaderProps {
   personId: string;
@@ -13,11 +14,12 @@ interface PersonPageHeaderProps {
 
 export function PersonPageHeader({ personId, personName }: PersonPageHeaderProps) {
   const router = useRouter();
+  const { setConfig } = useMobileHeader();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = useCallback(() => {
     setShowDeleteConfirm(true);
-  };
+  }, []);
 
   const handleDelete = async () => {
 
@@ -50,6 +52,28 @@ export function PersonPageHeader({ personId, personName }: PersonPageHeaderProps
       destructive: true,
     },
   ];
+
+  // Configure mobile header
+  useEffect(() => {
+    const mobileActions: PageAction[] = [
+      {
+        label: 'Delete person',
+        onClick: handleDeleteClick,
+        destructive: true,
+      },
+    ];
+
+    setConfig({
+      pageTitle: personName,
+      showBackButton: true,
+      backHref: '/people',
+      moreActions: mobileActions,
+    });
+
+    return () => {
+      setConfig(null);
+    };
+  }, [personName, setConfig, handleDeleteClick]);
 
   return (
     <>

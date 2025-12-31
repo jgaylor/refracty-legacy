@@ -7,6 +7,7 @@ import { PeopleList } from './PeopleList';
 import { AddPersonModal } from './AddPersonModal';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
+import { useMobileHeader } from '@/components/MobileHeaderProvider';
 
 interface PeoplePageClientProps {
   initialPeople: PersonWithNote[];
@@ -14,11 +15,26 @@ interface PeoplePageClientProps {
 
 export function PeoplePageClient({ initialPeople }: PeoplePageClientProps) {
   const router = useRouter();
+  const { setConfig } = useMobileHeader();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [people, setPeople] = useState<PersonWithNote[]>(initialPeople);
   const [deleteConfirm, setDeleteConfirm] = useState<PersonWithNote | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Configure mobile header
+  useEffect(() => {
+    setConfig({
+      primaryAction: {
+        label: 'Add Person',
+        onClick: () => setIsModalOpen(true),
+      },
+    });
+
+    return () => {
+      setConfig(null);
+    };
+  }, [setConfig]);
 
   // Sync local state with initialPeople when it changes (e.g., after adding a person)
   useEffect(() => {

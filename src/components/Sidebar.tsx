@@ -131,9 +131,101 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
   );
 
   return (
-    <aside className="flex-shrink-0 h-full w-56 sidebar-bg border-r">
+    <aside className="hidden md:block flex-shrink-0 h-full w-56 sidebar-bg border-r">
       {sidebarContent}
     </aside>
+  );
+}
+
+// Export the content separately for use in drawer
+export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
+  const [user, setUser] = useState<User | null>(initialUser);
+  const [loading, setLoading] = useState(!initialUser);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    if (initialUser) {
+      setLoading(false);
+    } else {
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        setUser(user);
+        setLoading(false);
+      });
+    }
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [initialUser]);
+
+  if (loading) {
+    return <SidebarSkeleton />;
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  const isActive = (path: string) => pathname === path;
+
+  return (
+    <div className="h-full flex flex-col">
+      {/* Header with branding */}
+      <div className="flex items-center justify-between py-8 px-4">
+        <Link href="/people" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
+          <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-medium text-sm">R</span>
+          </div>
+          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
+        </Link>
+      </div>
+
+      {/* Navigation items */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+        <Link
+          href="/people"
+          className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            isActive('/people')
+              ? 'bg-primary text-white'
+              : 'sidebar-link'
+          }`}
+        >
+          <UsersIcon className="w-5 h-5 flex-shrink-0" />
+          <span>People</span>
+        </Link>
+
+        <Link
+          href="/insights"
+          className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            isActive('/insights')
+              ? 'bg-primary text-white'
+              : 'sidebar-link'
+          }`}
+        >
+          <ChartIcon className="w-5 h-5 flex-shrink-0" />
+          <span>Insights</span>
+        </Link>
+
+        <Link
+          href="/settings"
+          className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            isActive('/settings')
+              ? 'bg-primary text-white'
+              : 'sidebar-link'
+          }`}
+        >
+          <SettingsIcon className="w-5 h-5 flex-shrink-0" />
+          <span>Settings</span>
+        </Link>
+      </nav>
+    </div>
   );
 }
 

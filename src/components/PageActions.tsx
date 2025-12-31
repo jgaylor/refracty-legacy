@@ -63,7 +63,7 @@ export function PageActions({ actions }: PageActionsProps) {
 
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-50 border"
+          className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-[60] border"
           style={{
             backgroundColor: 'var(--bg-primary)',
             borderColor: 'var(--border-color)',

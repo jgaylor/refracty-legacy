@@ -5,6 +5,10 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Sidebar } from "@/components/Sidebar";
+import { MobileHeader } from "@/components/MobileHeader";
+import { SidebarDrawer } from "@/components/SidebarDrawer";
+import { MobileHeaderProvider } from "@/components/MobileHeaderProvider";
+import { DrawerProvider } from "@/components/DrawerContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { InsightCapture } from "@/components/InsightCapture";
 import { ToasterWrapper } from "@/components/ToasterWrapper";
@@ -75,24 +79,32 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: themeScript }}
         />
         <ThemeProvider initialAppearance={profile?.appearance}>
-          <ToasterWrapper />
-          <Header />
-          {isLoggedIn ? (
-            <div className="flex flex-1 min-h-0">
-              <Sidebar initialUser={user} />
-              <main className="flex-1 min-w-0 pt-8 pb-32 overflow-auto [scrollbar-gutter:stable]">
-                {children}
-                <InsightCapture />
-              </main>
-            </div>
-          ) : (
-            <>
-              <div className="pt-32 pb-16">
-                {children}
-              </div>
-              <Footer />
-            </>
-          )}
+          <DrawerProvider>
+            <MobileHeaderProvider>
+              <ToasterWrapper />
+              <Header />
+              <MobileHeader />
+              {isLoggedIn ? (
+                <>
+                  <SidebarDrawer initialUser={user} />
+                  <div className="flex flex-1 min-h-0">
+                    <Sidebar initialUser={user} />
+                    <main className="flex-1 min-w-0 pt-20 pb-32 overflow-auto [scrollbar-gutter:stable] md:pt-8">
+                      {children}
+                      <InsightCapture />
+                    </main>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="pt-20 pb-16 md:pt-32">
+                    {children}
+                  </div>
+                  <Footer />
+                </>
+              )}
+            </MobileHeaderProvider>
+          </DrawerProvider>
         </ThemeProvider>
       </body>
     </html>
