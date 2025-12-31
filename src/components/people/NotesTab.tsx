@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { IconButton } from '../IconButton';
 import { useRouter } from 'next/navigation';
 import { Note } from '@/lib/supabase/people';
 import { InsightCategory } from '@/lib/supabase/insights';
@@ -237,16 +238,18 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
                 
                 {/* Menu Button */}
                 <div className="relative">
-                  <button
+                  <IconButton
+                    variant="group-hover"
+                    size="sm"
                     onClick={() => setOpenMenuId(openMenuId === note.id ? null : note.id)}
                     disabled={loading}
-                    className="text-neutral-500 hover:text-neutral-700 p-1 disabled:opacity-50"
+                    isActive={openMenuId === note.id}
                     aria-label="Note menu"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                     </svg>
-                  </button>
+                  </IconButton>
 
                   {/* Dropdown Menu */}
                   {openMenuId === note.id && (

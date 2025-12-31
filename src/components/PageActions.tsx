@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { IconButton } from './IconButton';
 
 export interface PageAction {
   label: string;
@@ -39,10 +40,9 @@ export function PageActions({ actions }: PageActionsProps) {
 
   return (
     <div className="relative" ref={menuRef}>
-      <button
+      <IconButton
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-md hover:bg-tertiary transition-colors"
-        style={{ backgroundColor: isOpen ? 'var(--bg-tertiary)' : 'transparent' }}
+        isActive={isOpen}
         aria-label="Page actions"
       >
         <svg
@@ -50,16 +50,15 @@ export function PageActions({ actions }: PageActionsProps) {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          style={{ color: 'var(--text-secondary)' }}
         >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+            d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
           />
         </svg>
-      </button>
+      </IconButton>
 
       {isOpen && (
         <div

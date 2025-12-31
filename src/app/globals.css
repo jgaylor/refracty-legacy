@@ -231,7 +231,10 @@
   }
   .icon-button:hover {
     color: var(--text-primary);
+    background-color: var(--bg-tertiary);
   }
+  
+  /* Legacy support - new code should use IconButton component */
 
   /* Sidebar */
   .sidebar-bg {

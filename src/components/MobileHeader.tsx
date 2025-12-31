@@ -8,6 +8,7 @@ import type { User } from '@supabase/supabase-js';
 import { Logo } from './Logo';
 import { useMobileHeader } from './MobileHeaderProvider';
 import { useDrawer } from './DrawerContext';
+import { IconButton } from './IconButton';
 import type { PageAction } from './PageActions';
 
 export function MobileHeader() {
@@ -102,65 +103,51 @@ export function MobileHeader() {
     >
       <nav className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16 gap-2">
-          {/* Left side: Menu icon */}
-          <div className="flex-shrink-0 w-10">
-            <div className="w-10 h-10 flex items-center justify-center">
-              <button
-                onClick={toggleDrawer}
-                className="p-2 rounded-md hover:bg-tertiary transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-                aria-label="Menu"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Center: Back button (if needed) + Logo or page title */}
-          <div className="flex-1 flex items-center justify-center gap-2 min-w-0">
+          {/* Left side: Back button (if needed) + Menu icon */}
+          <div className="flex-shrink-0 flex items-center gap-1">
             {showBackButton && (
-              <Link
-                href={backHref}
-                className="flex-shrink-0 p-2 rounded-md hover:bg-tertiary transition-colors"
-                style={{ color: 'var(--text-secondary)' }}
-                aria-label="Back"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+              <Link href={backHref} className="flex-shrink-0" aria-label="Back">
+                <IconButton>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </IconButton>
               </Link>
             )}
-            <div className="flex-shrink-0 min-w-0">
-              {config?.pageTitle ? (
-                <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
-                  {config.pageTitle}
-                </span>
-              ) : (
-                <Logo className="flex-shrink-0" />
-              )}
-            </div>
+            <IconButton onClick={toggleDrawer} aria-label="Menu">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            </IconButton>
+          </div>
+
+          {/* Center: Page title */}
+          <div className="flex-1 flex items-center justify-center min-w-0">
+            {config?.pageTitle && (
+              <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
+                {config.pageTitle}
+              </span>
+            )}
           </div>
 
           {/* Right side: Primary action + More menu */}
@@ -175,13 +162,9 @@ export function MobileHeader() {
             )}
             {config?.moreActions && config.moreActions.length > 0 && (
               <div className="relative" ref={moreMenuRef}>
-                <button
+                <IconButton
                   onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-                  className="p-2 rounded-md hover:bg-tertiary transition-colors"
-                  style={{
-                    backgroundColor: isMoreMenuOpen ? 'var(--bg-tertiary)' : 'transparent',
-                    color: 'var(--text-secondary)',
-                  }}
+                  isActive={isMoreMenuOpen}
                   aria-label="More actions"
                 >
                   <svg
@@ -194,10 +177,10 @@ export function MobileHeader() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                      d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
                     />
                   </svg>
-                </button>
+                </IconButton>
 
                 {isMoreMenuOpen && (
                   <div

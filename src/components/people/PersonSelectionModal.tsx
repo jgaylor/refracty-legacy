@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { IconButton } from '../IconButton';
 import { PersonWithNote } from '@/lib/supabase/people';
 
 interface PersonSelectionModalProps {
@@ -77,15 +78,15 @@ export function PersonSelectionModal({
               Choose the person this insight relates to.
             </p>
           </div>
-          <button
+          <IconButton
             onClick={onClose}
-            className="text-neutral-500 hover:text-neutral-700 focus:outline-none"
+            size="lg"
             aria-label="Close"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </button>
+          </IconButton>
         </div>
 
         {/* Search */}

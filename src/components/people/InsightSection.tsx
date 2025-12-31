@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { IconButton } from '../IconButton';
 import { Insight, InsightCategory } from '@/lib/supabase/insights';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 
@@ -94,25 +95,16 @@ export function InsightSection({
           {categoryLabel}
         </h3>
         {!isAdding && (
-          <button
+          <IconButton
+            variant="compact"
             onClick={() => setIsAdding(true)}
             disabled={loading}
-            className="p-1 rounded-md transition-colors disabled:opacity-50"
-            style={{ 
-              color: 'var(--text-primary)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-            }}
             aria-label="Add insight"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-          </button>
+          </IconButton>
         )}
       </div>
 
@@ -167,17 +159,19 @@ export function InsightSection({
                 >
                   {insight.content}
                 </span>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
+                <div className="flex gap-1">
+                  <IconButton
+                    variant="group-hover"
+                    destructive
+                    size="sm"
                     onClick={() => handleDeleteClick(insight.id)}
                     disabled={loading}
-                    className="text-neutral-500 hover:text-red-600 p-1"
                     aria-label="Delete insight"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                  </button>
+                  </IconButton>
                 </div>
               </>
             )}

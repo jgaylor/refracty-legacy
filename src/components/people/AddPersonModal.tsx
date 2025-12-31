@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CreatePersonInput } from '@/lib/supabase/people';
 import { useRouter } from 'next/navigation';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
+import { IconButton } from '../IconButton';
 
 interface AddPersonModalProps {
   isOpen: boolean;
@@ -110,16 +111,16 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
               Add someone to start capturing insights about how they work best.
             </p>
           </div>
-          <button
+          <IconButton
             onClick={handleClose}
             disabled={loading}
-            className="text-neutral-500 hover:text-neutral-700 focus:outline-none disabled:opacity-50"
+            size="lg"
             aria-label="Close"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
-          </button>
+          </IconButton>
         </div>
 
         {/* Form */}

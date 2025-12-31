@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { IconButton } from '../IconButton';
 
 export function SignupForm() {
   const [email, setEmail] = useState('');
@@ -91,10 +92,10 @@ export function SignupForm() {
               minLength={6}
               className="input w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary pr-10"
             />
-            <button
+            <IconButton
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 focus:outline-none transition-colors icon-button"
+              className="absolute right-3 top-1/2 -translate-y-1/2"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
@@ -107,7 +108,7 @@ export function SignupForm() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               )}
-            </button>
+            </IconButton>
           </div>
         </div>
 
