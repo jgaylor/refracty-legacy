@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
@@ -9,7 +10,6 @@ import { InsightCapture } from "@/components/InsightCapture";
 import { ToasterWrapper } from "@/components/ToasterWrapper";
 import { getUser } from "@/lib/supabase/auth";
 import { getUserProfile } from "@/lib/supabase/profile";
-import { getThemeScript } from "./theme-script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,12 +47,14 @@ export default async function RootLayout({
     profile = null;
   }
 
-  const themeScript = getThemeScript();
-  
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} h-full flex flex-col`}>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          src="/theme-init.js"
+        />
         <ThemeProvider initialAppearance={profile?.appearance}>
           <ToasterWrapper />
           <Header />
