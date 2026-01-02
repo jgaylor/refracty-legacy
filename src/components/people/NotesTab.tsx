@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IconButton } from '../IconButton';
 import { useRouter } from 'next/navigation';
 import { Note } from '@/lib/supabase/people';
@@ -37,6 +37,8 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [moveToMenuId, setMoveToMenuId] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [flipLeft, setFlipLeft] = useState(false);
+  const submenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   // Sync notes with initialNotes when it changes, but preserve optimistic updates
@@ -53,6 +55,37 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
       onNotesChange?.(initialNotes.length);
     }
   }, [initialNotes, notes, onNotesChange]);
+
+  // Detect available space and flip submenu to left if needed
+  useEffect(() => {
+    const checkSpace = () => {
+      if (moveToMenuId && submenuRef.current) {
+        // Get the parent menu item to measure available space
+        const parentElement = submenuRef.current.parentElement;
+        if (parentElement) {
+          const parentRect = parentElement.getBoundingClientRect();
+          const submenuWidth = 224; // w-56 = 14rem = 224px
+          const padding = 16; // 16px padding from viewport edge
+          const spaceOnRight = window.innerWidth - parentRect.right - padding;
+          const hasSpaceOnRight = spaceOnRight >= submenuWidth;
+          setFlipLeft(!hasSpaceOnRight);
+        }
+      } else {
+        setFlipLeft(false);
+      }
+    };
+
+    if (moveToMenuId) {
+      // Use requestAnimationFrame to ensure DOM is updated
+      requestAnimationFrame(() => {
+        checkSpace();
+      });
+    }
+
+    // Recalculate on window resize
+    window.addEventListener('resize', checkSpace);
+    return () => window.removeEventListener('resize', checkSpace);
+  }, [moveToMenuId]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -255,14 +288,14 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
                   {openMenuId === note.id && (
                     <>
                       <div
-                        className="fixed inset-0 z-10"
+                        className="fixed inset-0 z-45"
                         onClick={() => {
                           setOpenMenuId(null);
                           setMoveToMenuId(null);
                         }}
                       />
                       <div
-                        className="absolute right-0 mt-1 w-56 rounded-md shadow-lg z-20 border"
+                        className="absolute right-0 mt-1 w-56 rounded-md shadow-lg z-50 border"
                         style={{
                           backgroundColor: 'var(--bg-primary)',
                           borderColor: 'var(--border-color)',
@@ -308,7 +341,8 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
                             {/* Submenu for categories */}
                             {moveToMenuId === note.id && (
                               <div
-                                className="absolute left-full top-0 ml-1 w-56 rounded-md shadow-lg z-30 border"
+                                ref={submenuRef}
+                                className={`absolute ${flipLeft ? 'right-full mr-1' : 'left-full ml-1'} top-0 w-56 rounded-md shadow-lg z-[55] border`}
                                 style={{
                                   backgroundColor: 'var(--bg-primary)',
                                   borderColor: 'var(--border-color)',
