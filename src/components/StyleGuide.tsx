@@ -175,12 +175,105 @@ export function StyleGuide() {
         ]} />
       </section>
 
-      {/* Page Actions */}
+      {/* Dropdown Menus */}
       <section>
-        <h2 className="text-2xl font-bold mb-6">Page Actions Menu</h2>
-        <div className="flex items-center gap-4">
-          <PageActions actions={pageActions} />
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Click the three dots to see the menu</p>
+        <h2 className="text-2xl md:text-4xl font-bold mb-6">Dropdown Menus</h2>
+        <div className="space-y-8">
+          {/* Usage Guidelines */}
+          <div className="border rounded-lg p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-tertiary)' }}>
+            <h3 className="text-lg md:text-xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Usage Guidelines</h3>
+            <div className="space-y-2 text-sm md:text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <p><strong>Common Structure:</strong> Dropdowns use <code className="px-1 py-0.5 rounded" style={{ backgroundColor: 'var(--bg-primary)' }}>absolute</code> positioning with <code className="px-1 py-0.5 rounded" style={{ backgroundColor: 'var(--bg-primary)' }}>z-50</code> or higher for proper layering.</p>
+              <p><strong>Styling:</strong> <code className="px-1 py-0.5 rounded" style={{ backgroundColor: 'var(--bg-primary)' }}>rounded-md shadow-lg border</code> with theme-aware background and border colors.</p>
+              <p><strong>Hover States:</strong> Items use <code className="px-1 py-0.5 rounded" style={{ backgroundColor: 'var(--bg-primary)' }}>hover:bg-tertiary</code> for interactive feedback.</p>
+              <p><strong>Click Outside:</strong> All dropdowns close when clicking outside the menu area.</p>
+            </div>
+          </div>
+
+          {/* Page Actions Menu */}
+          <div className="border rounded-lg p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+            <h3 className="text-lg md:text-xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Page Actions Menu</h3>
+            <p className="text-sm md:text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Simple action menu triggered by horizontal three-dot icon. Used for page-level actions like Edit, Delete, etc.
+            </p>
+            <div className="flex items-center gap-4">
+              <PageActions actions={pageActions} />
+              <p className="text-sm md:text-xs" style={{ color: 'var(--text-secondary)' }}>Click the three dots to see the menu</p>
+            </div>
+            <div className="mt-4 p-3 rounded border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
+              <p className="text-xs font-mono mb-2" style={{ color: 'var(--text-secondary)' }}>Classes:</p>
+              <code className="text-xs" style={{ color: 'var(--text-primary)' }}>
+                absolute right-0 mt-2 w-48 rounded-md shadow-lg z-[60] border
+              </code>
+            </div>
+          </div>
+
+          {/* Mobile Breadcrumb Dropdown */}
+          <div className="border rounded-lg p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+            <h3 className="text-lg md:text-xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Mobile Breadcrumb Dropdown</h3>
+            <p className="text-sm md:text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Mobile-only dropdown that appears when clicking the page title. Shows navigation hierarchy with a title section and breadcrumb items. Current page is highlighted with a down-right arrow icon.
+            </p>
+            <div className="relative inline-block">
+              <div
+                className="w-64 rounded-md shadow-lg border"
+                style={{
+                  backgroundColor: 'var(--bg-primary)',
+                  borderColor: 'var(--border-color)',
+                }}
+              >
+                {/* Title */}
+                <div className="px-4 py-2 border-b" style={{ borderColor: 'var(--border-color)' }}>
+                  <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-secondary)' }}>
+                    Breadcrumb
+                  </span>
+                </div>
+                {/* Breadcrumb items */}
+                <div className="py-1">
+                  <div className="flex items-center px-4 py-2 text-sm hover:bg-tertiary transition-colors" style={{ color: 'var(--text-primary)' }}>
+                    <span>People</span>
+                  </div>
+                  <div
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium"
+                    style={{
+                      color: 'var(--text-primary)',
+                      backgroundColor: 'var(--bg-tertiary)',
+                    }}
+                  >
+                    <svg
+                      className="w-4 h-4 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      style={{ color: 'var(--text-tertiary)' }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4V5.4C4 8.76031 4 10.4405 4.65396 11.7239C5.2292 12.8529 6.14708 13.7708 7.27606 14.346C8.55953 15 10.2397 15 13.6 15H20M20 15L15 10M20 15L15 20" />
+                    </svg>
+                    <span className="flex-1">Cory Wilkerson</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 rounded border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
+              <p className="text-xs font-mono mb-2" style={{ color: 'var(--text-secondary)' }}>Classes:</p>
+              <code className="text-xs" style={{ color: 'var(--text-primary)' }}>
+                absolute top-full left-0 mt-2 w-64 rounded-md shadow-lg z-50 border
+              </code>
+            </div>
+          </div>
+
+          {/* Nested Menu (Notes Tab) */}
+          <div className="border rounded-lg p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-primary)' }}>
+            <h3 className="text-lg md:text-xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Nested Menu with Submenu</h3>
+            <p className="text-sm md:text-xs mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Dropdown menu with nested submenu functionality. Used in NotesTab for "Move to..." actions. Submenu auto-positions to the left if there's not enough space on the right.
+            </p>
+            <div className="p-3 rounded border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-color)' }}>
+              <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                See NotesTab component for implementation. Submenus use dynamic positioning based on available viewport space.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

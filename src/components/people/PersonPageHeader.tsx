@@ -65,6 +65,10 @@ export function PersonPageHeader({ personId, personName }: PersonPageHeaderProps
 
     setConfig({
       pageTitle: personName,
+      breadcrumbs: [
+        { label: 'People', href: '/people' },
+        { label: personName },
+      ],
       showBackButton: true,
       backHref: '/people',
       moreActions: mobileActions,

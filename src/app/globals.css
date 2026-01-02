@@ -6,6 +6,7 @@
   /* CSS Variables for Theming - Light Mode (default) */
   :root {
     --bg-primary: #ffffff;
+    --bg-primary-transparent: rgba(255, 255, 255, 0.9);
     --bg-secondary: #fafafa;
     --bg-tertiary: #f5f5f5;
     --bg-gradient: linear-gradient(135deg, #cbecfe 0%, #9ebde7 100%);
@@ -22,6 +23,7 @@
   /* CSS Variables for Theming - Dark Mode */
   [data-theme="dark"] {
     --bg-primary: #171717;
+    --bg-primary-transparent: rgba(23, 23, 23, 0.9);
     --bg-secondary: #262626;
     --bg-tertiary: #404040;
     --bg-gradient: linear-gradient(135deg, #14224b 0%, #172f7e 100%);
@@ -32,6 +34,22 @@
     --border-color-light: #262626;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --link-color: #60a5fa;
+  }
+
+  /* Safari backdrop-blur fix - makes background more opaque */
+  @supports (-webkit-backdrop-filter: blur(4px)) {
+    header[class*="backdrop-blur"] {
+      background-color: var(--bg-primary-transparent) !important;
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+  }
+
+  /* Safari mobile spacing fix for breadcrumb dropdown button */
+  @supports (-webkit-touch-callout: none) {
+    button[class*="group"] span + svg {
+      margin-left: 0.375rem; /* 6px - additional spacing for Safari */
+    }
   }
 
   /* Apply theme variables to body */
