@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Strict-Transport-Security',
-            value: 'max-age=86400; includeSubDomains', // Temporarily reduced from 1 year to 1 day to allow Arc browser to clear cached bad HSTS state
+            value: 'max-age=31536000; includeSubDomains',
           },
           {
             key: 'Content-Security-Policy',
