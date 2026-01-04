@@ -1,5 +1,7 @@
 'use client';
 
+import { createPortal } from 'react-dom';
+
 interface ConfirmDialogProps {
   isOpen: boolean;
   title: string;
@@ -29,9 +31,9 @@ export function ConfirmDialog({
     }
   };
 
-  return (
+  const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
       onClick={handleOverlayClick}
     >
@@ -71,5 +73,12 @@ export function ConfirmDialog({
       </div>
     </div>
   );
+
+  // Portal the modal to document.body to escape ViewportWrapper stacking context
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return createPortal(modalContent, document.body);
 }
 

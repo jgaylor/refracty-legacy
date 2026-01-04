@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CreatePersonInput } from '@/lib/supabase/people';
 import { useRouter } from 'next/navigation';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
@@ -14,7 +15,6 @@ interface AddPersonModalProps {
 
 export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModalProps) {
   const [name, setName] = useState('');
-  const [vibeSummary, setVibeSummary] = useState('');
   const [firstNote, setFirstNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +29,7 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
 
     const input: CreatePersonInput = {
       name,
-      vibe_summary: vibeSummary.trim() || null,
+      vibe_summary: null,
       first_note: firstNote.trim() || null,
     };
 
@@ -48,7 +48,6 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
       
       // Reset form
       setName('');
-      setVibeSummary('');
       setFirstNote('');
       onClose();
       
@@ -78,7 +77,6 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
   const handleClose = () => {
     if (!loading) {
       setName('');
-      setVibeSummary('');
       setFirstNote('');
       setError(null);
       onClose();
@@ -91,9 +89,9 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
     }
   };
 
-  return (
+  const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
       onClick={handleOverlayClick}
     >
@@ -137,22 +135,6 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Enter their name"
-              disabled={loading}
-              className="input w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          {/* Vibe Summary */}
-          <div>
-            <label htmlFor="vibe-summary" className="label block text-sm font-medium mb-2">
-              Vibe Summary <span className="text-neutral-400 text-xs">(Optional)</span>
-            </label>
-            <input
-              id="vibe-summary"
-              type="text"
-              value={vibeSummary}
-              onChange={(e) => setVibeSummary(e.target.value)}
-              placeholder="e.g. Thinks best out loud, quick responder"
               disabled={loading}
               className="input w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -202,5 +184,12 @@ export function AddPersonModal({ isOpen, onClose, onPersonAdded }: AddPersonModa
       </div>
     </div>
   );
+
+  // Portal the modal to document.body to escape ViewportWrapper stacking context
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return createPortal(modalContent, document.body);
 }
 

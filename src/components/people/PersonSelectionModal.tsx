@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { IconButton } from '../IconButton';
 import { PersonWithNote } from '@/lib/supabase/people';
 
@@ -58,9 +59,9 @@ export function PersonSelectionModal({
     }
   };
 
-  return (
+  const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
       onClick={handleOverlayClick}
     >
@@ -174,5 +175,12 @@ export function PersonSelectionModal({
       </div>
     </div>
   );
+
+  // Portal the modal to document.body to escape ViewportWrapper stacking context
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return createPortal(modalContent, document.body);
 }
 
