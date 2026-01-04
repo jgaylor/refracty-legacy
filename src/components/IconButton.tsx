@@ -83,10 +83,10 @@ export function IconButton({
   let styleProps: React.CSSProperties = {};
 
   if (variant === 'group-hover') {
-    // Group hover pattern: hidden until container hover, then normal hover states
+    // Group hover pattern: visible on mobile, hidden until container hover on desktop
     variantClasses = destructive 
-      ? 'opacity-0 group-hover:opacity-100 text-neutral-500'
-      : 'opacity-0 group-hover:opacity-100';
+      ? 'opacity-100 md:opacity-0 md:group-hover:opacity-100 text-neutral-500'
+      : 'opacity-100 md:opacity-0 md:group-hover:opacity-100';
     
     styleProps = {
       color: destructive ? undefined : 'var(--text-secondary)',
