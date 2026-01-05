@@ -342,7 +342,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
   const sidebarContent = (
     <div className="h-full flex flex-col">
       {/* Sticky Header Section */}
-      <div className="flex-shrink-0 border-b" style={{ borderColor: 'var(--border-color)' }}>
+      <div className="flex-shrink-0 border-b" style={{ borderColor: 'var(--border-color)', paddingTop: '1.5rem', paddingBottom: '1.5rem' }}>
         {/* Header with branding */}
         <div className="flex items-center py-4 px-4">
           <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
@@ -355,7 +355,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
         </div>
 
         {/* User and Home - Sticky */}
-        <div className="px-4 pb-4 space-y-1">
+        <div className="px-4 space-y-1">
           {/* User */}
           <div className="relative" ref={userMenuRef}>
             <button
@@ -445,7 +445,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
           {/* Home */}
           <Link
             href="/home"
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors mb-2"
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors"
           >
             <HomeIcon className="w-5 h-5 flex-shrink-0" />
             <span>Home</span>
@@ -454,7 +454,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
       </div>
 
       {/* Scrollable Navigation items */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
+      <nav className="flex-1 overflow-y-auto px-4 pt-4 space-y-3 scrollbar-hide" style={{ paddingBottom: '10rem' }}>
 
         {/* Favorites Section */}
         <div className="mt-1">
@@ -951,7 +951,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
   return (
     <div className="h-full flex flex-col">
       {/* Sticky Header Section */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 border-b" style={{ borderColor: 'var(--border-color)', paddingTop: '1.5rem', paddingBottom: '1.5rem' }}>
         {/* Header with branding */}
         <div className="flex items-center py-4 px-4">
           <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
@@ -963,7 +963,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
         </div>
 
         {/* User and Home - Sticky */}
-        <div className="px-4 pb-4 space-y-1">
+        <div className="px-4 space-y-1">
           {/* User */}
           <div className="relative" ref={userMenuRef}>
             <button
@@ -1053,7 +1053,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
           {/* Home */}
           <Link
             href="/home"
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors mb-2"
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors"
           >
             <HomeIcon className="w-5 h-5 flex-shrink-0" />
             <span>Home</span>
@@ -1062,7 +1062,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
       </div>
 
       {/* Scrollable Navigation items */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
+      <nav className="flex-1 overflow-y-auto px-4 pt-4 space-y-3 scrollbar-hide" style={{ paddingBottom: '10rem' }}>
 
         {/* Favorites Section */}
         <div className="mt-1">
