@@ -32,7 +32,6 @@ const ALL_CATEGORIES: InsightCategory[] = [
 
 export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProps) {
   const [notes, setNotes] = useState<Note[]>(initialNotes);
-  const [newNoteContent, setNewNoteContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [moveToMenuId, setMoveToMenuId] = useState<string | null>(null);
@@ -67,37 +66,6 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
     hours = hours ? hours : 12; // the hour '0' should be '12'
     const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
     return `${month}/${day}/${year} at ${hours}:${minutesStr} ${ampm}`;
-  };
-
-  const handleAddNote = async () => {
-    if (!newNoteContent.trim()) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/people/${personId}/notes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: newNoteContent }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        const updated = [result.note, ...notes];
-        setNotes(updated);
-        onNotesChange?.(updated.length);
-        setNewNoteContent('');
-        showSuccessToast('Note added');
-      } else {
-        throw new Error(result.error || 'Failed to add note');
-      }
-    } catch (error) {
-      console.error('Error adding note:', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleMoveToInsight = async (noteId: string, category: InsightCategory) => {
@@ -180,37 +148,6 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
 
   return (
     <div>
-      {/* Add Note Input */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleAddNote();
-        }}
-        className="mb-6 flex gap-3"
-      >
-        <textarea
-          placeholder="Add a quick note..."
-          value={newNoteContent}
-          onChange={(e) => setNewNoteContent(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleAddNote();
-            }
-          }}
-          rows={3}
-          disabled={loading}
-          className="input flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary resize-y"
-        />
-        <button
-          type="submit"
-          disabled={loading || !newNoteContent.trim()}
-          className="btn-primary px-4 py-2 rounded-md h-fit disabled:opacity-50"
-        >
-          Add
-        </button>
-      </form>
-
       {/* Notes List */}
       {notes.length === 0 ? (
         <div className="text-center py-12">
