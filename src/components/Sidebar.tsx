@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { SidebarSkeleton } from './skeletons/SidebarSkeleton';
+import { SidebarListItemSkeleton } from './skeletons/SidebarListItemSkeleton';
 import { PersonWithNote } from '@/lib/supabase/people';
 import { PeopleListItem } from './people/PeopleListItem';
 import { AddPersonModal } from './people/AddPersonModal';
@@ -51,6 +52,21 @@ const getUserInitials = (user: User): string => {
   }
   
   return 'U';
+};
+
+// Helper function to get user display name
+const getUserDisplayName = (user: User): string => {
+  // Try to get full name from user_metadata
+  if (user.user_metadata?.full_name) {
+    return user.user_metadata.full_name;
+  }
+  
+  // Fall back to email
+  if (user.email) {
+    return user.email;
+  }
+  
+  return 'User';
 };
 
 interface SidebarProps {
@@ -325,29 +341,44 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
 
   const sidebarContent = (
     <div className="h-full flex flex-col">
-      {/* Header with branding and user menu */}
-      <div className="flex items-center justify-between py-8 px-4">
+      {/* Header with branding */}
+      <div className="flex items-center py-8 px-4">
         <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
           {/* Avatar placeholder with "R" - aligned with menu icons */}
-          <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center flex-shrink-0">
+          <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
             <span className="text-white font-medium text-sm">R</span>
           </div>
           <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
         </Link>
-        
-        {/* User avatar dropdown */}
+      </div>
+
+      {/* Navigation items */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-3">
+        {/* User */}
         <div className="relative" ref={userMenuRef}>
           <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 hover:opacity-80 transition-opacity"
-            aria-label="User menu"
+            className="group relative flex items-center gap-3 px-3 py-2 rounded-md sidebar-link transition-colors w-full"
           >
-            <span className="text-[10px] font-medium">{getUserInitials(user)}</span>
+{user.user_metadata?.avatar_url ? (
+              <img
+                src={user.user_metadata.avatar_url}
+                alt="User avatar"
+                className="w-6 h-6 rounded-full object-cover flex-shrink-0"
+              />
+            ) : (
+              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
+                <span className="text-white text-[10px] font-medium">{getUserInitials(user)}</span>
+              </div>
+            )}
+            <span className="flex-1 text-sm text-left truncate" style={{ color: 'var(--text-primary)' }}>
+              {getUserDisplayName(user)}
+            </span>
           </button>
 
           {isUserMenuOpen && (
             <div
-              className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-50 border"
+              className="absolute left-0 mt-1 w-48 rounded-md shadow-lg z-50 border"
               style={{
                 backgroundColor: 'var(--bg-primary)',
                 borderColor: 'var(--border-color)',
@@ -408,10 +439,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Navigation items */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-3">
         {/* Home */}
         <Link
           href="/home"
@@ -488,9 +516,11 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
           {isFavoritesExpanded && (
             <div className="space-y-0.5 max-h-64 overflow-y-auto">
               {peopleLoading ? (
-                <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                  Loading...
-                </div>
+                <>
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                </>
               ) : favorites.length === 0 ? (
                 <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
                   No favorites yet
@@ -608,9 +638,11 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
           {isPeopleExpanded && (
             <div className="space-y-0.5 max-h-64 overflow-y-auto">
               {peopleLoading ? (
-                <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                  Loading...
-                </div>
+                <>
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                </>
               ) : filteredPeople.length === 0 ? (
                 <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
                   {peopleSearchQuery ? 'No matches' : 'No people yet'}
@@ -911,28 +943,43 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header with branding and user menu */}
-      <div className="flex items-center justify-between py-8 px-4">
+      {/* Header with branding */}
+      <div className="flex items-center py-8 px-4">
         <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
-          <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center flex-shrink-0">
+          <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
             <span className="text-white font-medium text-sm">R</span>
           </div>
           <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
         </Link>
-        
-        {/* User avatar dropdown */}
+      </div>
+
+      {/* Navigation items */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-3">
+        {/* User */}
         <div className="relative" ref={userMenuRef}>
           <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 hover:opacity-80 transition-opacity"
-            aria-label="User menu"
+            className="group relative flex items-center gap-3 px-3 py-2 rounded-md sidebar-link transition-colors w-full"
           >
-            <span className="text-[10px] font-medium">{getUserInitials(user)}</span>
+{user.user_metadata?.avatar_url ? (
+              <img
+                src={user.user_metadata.avatar_url}
+                alt="User avatar"
+                className="w-6 h-6 rounded-full object-cover flex-shrink-0"
+              />
+            ) : (
+              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
+                <span className="text-white text-[10px] font-medium">{getUserInitials(user)}</span>
+              </div>
+            )}
+            <span className="flex-1 text-sm text-left truncate" style={{ color: 'var(--text-primary)' }}>
+              {getUserDisplayName(user)}
+            </span>
           </button>
 
           {isUserMenuOpen && (
             <div
-              className="absolute right-0 mt-2 w-48 rounded-md shadow-lg z-50 border"
+              className="absolute left-0 mt-1 w-48 rounded-md shadow-lg z-50 border"
               style={{
                 backgroundColor: 'var(--bg-primary)',
                 borderColor: 'var(--border-color)',
@@ -993,10 +1040,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Navigation items */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-3">
         {/* Home */}
         <Link
           href="/home"
@@ -1073,9 +1117,11 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
           {isFavoritesExpanded && (
             <div className="space-y-0.5 max-h-64 overflow-y-auto">
               {peopleLoading ? (
-                <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                  Loading...
-                </div>
+                <>
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                </>
               ) : favorites.length === 0 ? (
                 <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
                   No favorites yet
@@ -1193,9 +1239,11 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
           {isPeopleExpanded && (
             <div className="space-y-0.5 max-h-64 overflow-y-auto">
               {peopleLoading ? (
-                <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                  Loading...
-                </div>
+                <>
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                  <SidebarListItemSkeleton />
+                </>
               ) : filteredPeople.length === 0 ? (
                 <div className="px-3 py-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
                   {peopleSearchQuery ? 'No matches' : 'No people yet'}
