@@ -341,116 +341,123 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
 
   const sidebarContent = (
     <div className="h-full flex flex-col">
-      {/* Header with branding */}
-      <div className="flex items-center py-8 px-4">
-        <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
-          {/* Avatar placeholder with "R" - aligned with menu icons */}
-          <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
-            <span className="text-white font-medium text-sm">R</span>
-          </div>
-          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
-        </Link>
-      </div>
-
-      {/* Navigation items */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-3">
-        {/* User */}
-        <div className="relative" ref={userMenuRef}>
-          <button
-            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="group relative flex items-center gap-3 px-3 py-2 rounded-md sidebar-link transition-colors w-full"
-          >
-{user.user_metadata?.avatar_url ? (
-              <img
-                src={user.user_metadata.avatar_url}
-                alt="User avatar"
-                className="w-6 h-6 rounded-full object-cover flex-shrink-0"
-              />
-            ) : (
-              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
-                <span className="text-white text-[10px] font-medium">{getUserInitials(user)}</span>
-              </div>
-            )}
-            <span className="flex-1 text-sm text-left truncate" style={{ color: 'var(--text-primary)' }}>
-              {getUserDisplayName(user)}
-            </span>
-          </button>
-
-          {isUserMenuOpen && (
-            <div
-              className="absolute left-0 mt-1 w-48 rounded-md shadow-lg z-50 border"
-              style={{
-                backgroundColor: 'var(--bg-primary)',
-                borderColor: 'var(--border-color)',
-              }}
-            >
-              <div className="py-1">
-                {/* Settings */}
-                <Link
-                  href="/settings"
-                  onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
-                  style={{
-                    color: 'var(--text-primary)',
-                    backgroundColor: 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                >
-                  <SettingsIcon className="w-4 h-4 flex-shrink-0" />
-                  <span>Settings</span>
-                </Link>
-
-                {/* Logout */}
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
-                  style={{
-                    color: '#ef4444',
-                    backgroundColor: 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                >
-                  <svg
-                    className="w-4 h-4 flex-shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
-                  </svg>
-                  <span>Logout</span>
-                </button>
-              </div>
+      {/* Sticky Header Section */}
+      <div className="flex-shrink-0 border-b" style={{ borderColor: 'var(--border-color)' }}>
+        {/* Header with branding */}
+        <div className="flex items-center py-4 px-4">
+          <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
+            {/* Avatar placeholder with "R" - aligned with menu icons */}
+            <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
+              <span className="text-white font-medium text-sm">R</span>
             </div>
-          )}
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
+          </Link>
         </div>
 
-        {/* Home */}
-        <Link
-          href="/home"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors"
-        >
-          <HomeIcon className="w-5 h-5 flex-shrink-0" />
-          <span>Home</span>
-        </Link>
+        {/* User and Home - Sticky */}
+        <div className="px-4 pb-4 space-y-1">
+          {/* User */}
+          <div className="relative" ref={userMenuRef}>
+            <button
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              className="group relative flex items-center gap-3 px-3 py-2 rounded-md sidebar-link transition-colors w-full"
+            >
+{user.user_metadata?.avatar_url ? (
+                <img
+                  src={user.user_metadata.avatar_url}
+                  alt="User avatar"
+                  className="w-5 h-5 rounded-full object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
+                  <span className="text-white text-[9px] font-medium">{getUserInitials(user)}</span>
+                </div>
+              )}
+              <span className="flex-1 text-sm text-left truncate font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {getUserDisplayName(user)}
+              </span>
+            </button>
+
+            {isUserMenuOpen && (
+              <div
+                className="absolute left-0 mt-1 w-48 rounded-md shadow-lg z-50 border"
+                style={{
+                  backgroundColor: 'var(--bg-primary)',
+                  borderColor: 'var(--border-color)',
+                }}
+              >
+                <div className="py-1">
+                  {/* Settings */}
+                  <Link
+                    href="/settings"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
+                    style={{
+                      color: 'var(--text-primary)',
+                      backgroundColor: 'transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <SettingsIcon className="w-4 h-4 flex-shrink-0" />
+                    <span>Settings</span>
+                  </Link>
+
+                  {/* Logout */}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
+                    style={{
+                      color: '#ef4444',
+                      backgroundColor: 'transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <svg
+                      className="w-4 h-4 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Home */}
+          <Link
+            href="/home"
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors mb-2"
+          >
+            <HomeIcon className="w-5 h-5 flex-shrink-0" />
+            <span>Home</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Scrollable Navigation items */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
 
         {/* Favorites Section */}
-        <div className="mt-6">
+        <div className="mt-1">
           {/* Favorites Header */}
           <div className="group relative flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
             onMouseEnter={(e) => {
@@ -514,7 +521,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
 
           {/* Favorites List */}
           {isFavoritesExpanded && (
-            <div className="space-y-0.5 max-h-64 overflow-y-auto">
+            <div className="space-y-0.5">
               {peopleLoading ? (
                 <>
                   <SidebarListItemSkeleton />
@@ -636,7 +643,7 @@ export function Sidebar({ initialUser = null }: SidebarProps = {}) {
 
           {/* People List */}
           {isPeopleExpanded && (
-            <div className="space-y-0.5 max-h-64 overflow-y-auto">
+            <div className="space-y-0.5">
               {peopleLoading ? (
                 <>
                   <SidebarListItemSkeleton />
@@ -943,115 +950,122 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header with branding */}
-      <div className="flex items-center py-8 px-4">
-        <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
-          <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
-            <span className="text-white font-medium text-sm">R</span>
-          </div>
-          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
-        </Link>
-      </div>
-
-      {/* Navigation items */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-3">
-        {/* User */}
-        <div className="relative" ref={userMenuRef}>
-          <button
-            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="group relative flex items-center gap-3 px-3 py-2 rounded-md sidebar-link transition-colors w-full"
-          >
-{user.user_metadata?.avatar_url ? (
-              <img
-                src={user.user_metadata.avatar_url}
-                alt="User avatar"
-                className="w-6 h-6 rounded-full object-cover flex-shrink-0"
-              />
-            ) : (
-              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
-                <span className="text-white text-[10px] font-medium">{getUserInitials(user)}</span>
-              </div>
-            )}
-            <span className="flex-1 text-sm text-left truncate" style={{ color: 'var(--text-primary)' }}>
-              {getUserDisplayName(user)}
-            </span>
-          </button>
-
-          {isUserMenuOpen && (
-            <div
-              className="absolute left-0 mt-1 w-48 rounded-md shadow-lg z-50 border"
-              style={{
-                backgroundColor: 'var(--bg-primary)',
-                borderColor: 'var(--border-color)',
-              }}
-            >
-              <div className="py-1">
-                {/* Settings */}
-                <Link
-                  href="/settings"
-                  onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
-                  style={{
-                    color: 'var(--text-primary)',
-                    backgroundColor: 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                >
-                  <SettingsIcon className="w-4 h-4 flex-shrink-0" />
-                  <span>Settings</span>
-                </Link>
-
-                {/* Logout */}
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
-                  style={{
-                    color: '#ef4444',
-                    backgroundColor: 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                >
-                  <svg
-                    className="w-4 h-4 flex-shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
-                  </svg>
-                  <span>Logout</span>
-                </button>
-              </div>
+      {/* Sticky Header Section */}
+      <div className="flex-shrink-0">
+        {/* Header with branding */}
+        <div className="flex items-center py-4 px-4">
+          <Link href="/home" className="flex items-center gap-3 px-3 hover:opacity-80 transition-opacity">
+            <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)' }}>
+              <span className="text-white font-medium text-sm">R</span>
             </div>
-          )}
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Refracty</span>
+          </Link>
         </div>
 
-        {/* Home */}
-        <Link
-          href="/home"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors"
-        >
-          <HomeIcon className="w-5 h-5 flex-shrink-0" />
-          <span>Home</span>
-        </Link>
+        {/* User and Home - Sticky */}
+        <div className="px-4 pb-4 space-y-1">
+          {/* User */}
+          <div className="relative" ref={userMenuRef}>
+            <button
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              className="group relative flex items-center gap-3 px-3 py-2 rounded-md sidebar-link transition-colors w-full"
+            >
+{user.user_metadata?.avatar_url ? (
+                <img
+                  src={user.user_metadata.avatar_url}
+                  alt="User avatar"
+                  className="w-5 h-5 rounded-full object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' }}>
+                  <span className="text-white text-[9px] font-medium">{getUserInitials(user)}</span>
+                </div>
+              )}
+              <span className="flex-1 text-sm text-left truncate font-semibold" style={{ color: 'var(--text-primary)' }}>
+                {getUserDisplayName(user)}
+              </span>
+            </button>
+
+            {isUserMenuOpen && (
+              <div
+                className="absolute left-0 mt-1 w-48 rounded-md shadow-lg z-50 border"
+                style={{
+                  backgroundColor: 'var(--bg-primary)',
+                  borderColor: 'var(--border-color)',
+                }}
+              >
+                <div className="py-1">
+                  {/* Settings */}
+                  <Link
+                    href="/settings"
+                    onClick={() => setIsUserMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
+                    style={{
+                      color: 'var(--text-primary)',
+                      backgroundColor: 'transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <SettingsIcon className="w-4 h-4 flex-shrink-0" />
+                    <span>Settings</span>
+                  </Link>
+
+                  {/* Logout */}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm hover:bg-tertiary transition-colors"
+                    style={{
+                      color: '#ef4444',
+                      backgroundColor: 'transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <svg
+                      className="w-4 h-4 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Home */}
+          <Link
+            href="/home"
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-semibold sidebar-link transition-colors mb-2"
+          >
+            <HomeIcon className="w-5 h-5 flex-shrink-0" />
+            <span>Home</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Scrollable Navigation items */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide">
 
         {/* Favorites Section */}
-        <div className="mt-6">
+        <div className="mt-1">
           {/* Favorites Header */}
           <div className="group relative flex items-center gap-3 px-3 py-2 rounded-md transition-colors"
             onMouseEnter={(e) => {
@@ -1115,7 +1129,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
 
           {/* Favorites List */}
           {isFavoritesExpanded && (
-            <div className="space-y-0.5 max-h-64 overflow-y-auto">
+            <div className="space-y-0.5">
               {peopleLoading ? (
                 <>
                   <SidebarListItemSkeleton />
@@ -1237,7 +1251,7 @@ export function SidebarContent({ initialUser = null }: SidebarProps = {}) {
 
           {/* People List */}
           {isPeopleExpanded && (
-            <div className="space-y-0.5 max-h-64 overflow-y-auto">
+            <div className="space-y-0.5">
               {peopleLoading ? (
                 <>
                   <SidebarListItemSkeleton />
