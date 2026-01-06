@@ -81,7 +81,7 @@ export function AppearanceSettings({ initialAppearance }: { initialAppearance?: 
               checked={currentAppearance === 'system'}
               onChange={() => handleChange('system')}
               disabled={saving}
-              className="w-4 h-4 accent-primary focus:ring-primary"
+              className="w-4 h-4"
             />
             <div className="flex-1">
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>System</span>
@@ -97,7 +97,7 @@ export function AppearanceSettings({ initialAppearance }: { initialAppearance?: 
               checked={currentAppearance === 'light'}
               onChange={() => handleChange('light')}
               disabled={saving}
-              className="w-4 h-4 accent-primary focus:ring-primary"
+              className="w-4 h-4"
             />
             <div className="flex-1">
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Light</span>
@@ -112,7 +112,7 @@ export function AppearanceSettings({ initialAppearance }: { initialAppearance?: 
               checked={currentAppearance === 'dark'}
               onChange={() => handleChange('dark')}
               disabled={saving}
-              className="w-4 h-4 accent-primary focus:ring-primary"
+              className="w-4 h-4"
             />
             <div className="flex-1">
               <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Dark</span>

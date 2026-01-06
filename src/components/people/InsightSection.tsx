@@ -29,6 +29,7 @@ interface InsightSectionProps {
   onEdit: (id: string, content: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onMoveCategory?: (id: string, newCategory: InsightCategory) => Promise<void>;
+  isFirstSection?: boolean;
 }
 
 export function InsightSection({
@@ -39,6 +40,7 @@ export function InsightSection({
   onEdit,
   onDelete,
   onMoveCategory,
+  isFirstSection = false,
 }: InsightSectionProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newContent, setNewContent] = useState('');
@@ -147,14 +149,18 @@ export function InsightSection({
 
   return (
     <div 
-      className="p-4 rounded-lg border mb-4 group"
+      className={`px-4 py-4 group ${!isFirstSection ? 'border-t' : ''}`}
       style={{ 
-        backgroundColor: 'var(--bg-primary)', 
-        borderColor: 'var(--border-color)' 
+        borderColor: !isFirstSection ? 'var(--border-color)' : 'transparent',
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+        <h3 
+          className="text-xs font-medium uppercase tracking-wider" 
+          style={{ 
+            color: 'var(--text-secondary)',
+          }}
+        >
           {categoryLabel}
         </h3>
         {!isAdding && (

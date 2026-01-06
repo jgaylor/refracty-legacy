@@ -11,11 +11,11 @@ interface InsightsTabProps {
 }
 
 const CATEGORY_LABELS: Record<InsightCategory, string> = {
-  motivated_by: 'Motivated by:',
-  preferred_communication: 'Preferred communication:',
-  works_best_when: 'Works best when:',
-  collaboration_style: 'Collaboration style:',
-  feedback_approach: 'Feedback approach:',
+  motivated_by: 'Motivated by',
+  preferred_communication: 'Preferred communication',
+  works_best_when: 'Works best when',
+  collaboration_style: 'Collaboration style',
+  feedback_approach: 'Feedback approach',
 };
 
 const ALL_CATEGORIES: InsightCategory[] = [
@@ -172,18 +172,28 @@ export function InsightsTab({ personId, initialInsights }: InsightsTabProps) {
 
   return (
     <div>
-      {ALL_CATEGORIES.map((category) => (
-        <InsightSection
-          key={category}
-          category={category}
-          categoryLabel={CATEGORY_LABELS[category]}
-          insights={insightsByCategory[category] || []}
-          onAdd={handleAdd}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onMoveCategory={handleMoveCategory}
-        />
-      ))}
+      {/* Single card container with all insights */}
+      <div
+        className="rounded-lg border"
+        style={{
+          backgroundColor: 'var(--bg-primary)',
+          borderColor: 'var(--border-color)',
+        }}
+      >
+        {ALL_CATEGORIES.map((category, categoryIndex) => (
+          <InsightSection
+            key={category}
+            category={category}
+            categoryLabel={CATEGORY_LABELS[category]}
+            insights={insightsByCategory[category] || []}
+            onAdd={handleAdd}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onMoveCategory={handleMoveCategory}
+            isFirstSection={categoryIndex === 0}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -93,12 +93,7 @@ export function PersonHeader({ person, onDelete }: PersonHeaderProps) {
   return (
     <>
       <div className="mb-8">
-        <div className="flex items-start gap-4">
-          {/* Avatar */}
-          <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 text-xl font-medium">
-            {getInitials(person.name)}
-          </div>
-
+        <div className="flex items-start justify-between gap-4">
           {/* Name and Summary */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2">
@@ -193,6 +188,11 @@ export function PersonHeader({ person, onDelete }: PersonHeaderProps) {
                 {person.vibe_summary || 'Add a summary...'}
               </p>
             )}
+          </div>
+
+          {/* Avatar */}
+          <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0 text-xl font-medium">
+            {getInitials(person.name)}
           </div>
         </div>
       </div>
