@@ -5,6 +5,7 @@ import { Breadcrumb } from './Breadcrumb';
 import { PageActions } from './PageActions';
 import type { PageAction } from './PageActions';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
+import { Shimmer } from './Shimmer';
 
 export function StyleGuide() {
   const [activeTab, setActiveTab] = useState<'tab1' | 'tab2'>('tab1');
@@ -163,6 +164,104 @@ export function StyleGuide() {
             Preferred communication
           </span>
           <span className="label text-sm">Label Text</span>
+        </div>
+      </section>
+
+      {/* Shimmer */}
+      <section>
+        <h2 className="text-2xl font-bold mb-6">Shimmer</h2>
+        <div className="space-y-6">
+          <div>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+              Animated text effect with a gradient that slides across. Perfect for loading states and placeholder text.
+            </p>
+          </div>
+
+          {/* Different Sizes */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Sizes</h3>
+            <div className="space-y-3">
+              <div>
+                <Shimmer text="Extra Small Shimmer Text" size="xs" />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>size="xs"</p>
+              </div>
+              <div>
+                <Shimmer text="Small Shimmer Text" size="sm" />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>size="sm"</p>
+              </div>
+              <div>
+                <Shimmer text="Base Shimmer Text" size="base" />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>size="base"</p>
+              </div>
+              <div>
+                <Shimmer text="Large Shimmer Text" size="lg" />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>size="lg"</p>
+              </div>
+              <div>
+                <Shimmer text="Extra Large Shimmer Text" size="xl" />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>size="xl"</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Different Speeds */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Animation Speeds</h3>
+            <div className="space-y-3">
+              <div>
+                <Shimmer text="Fast Shimmer (1s)" speed={1} />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>speed={1}</p>
+              </div>
+              <div>
+                <Shimmer text="Default Shimmer (2s)" speed={2} />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>speed={2} (default)</p>
+              </div>
+              <div>
+                <Shimmer text="Slow Shimmer (4s)" speed={4} />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>speed={4}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Custom Colors */}
+          <div>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Custom Colors</h3>
+            <div className="space-y-3">
+              <div>
+                <Shimmer 
+                  text="Custom Gradient Shimmer" 
+                  colors={['#667eea', '#764ba2', '#f093fb', '#764ba2', '#667eea']}
+                />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                  colors={['#667eea', '#764ba2', '#f093fb', '#764ba2', '#667eea']}
+                </p>
+              </div>
+              <div>
+                <Shimmer 
+                  text="Blue Gradient Shimmer" 
+                  colors={['#3b82f6', '#60a5fa', '#93c5fd', '#60a5fa', '#3b82f6']}
+                />
+                <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                  colors={['#3b82f6', '#60a5fa', '#93c5fd', '#60a5fa', '#3b82f6']}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Usage Example */}
+          <div className="border rounded-lg p-4" style={{ borderColor: 'var(--border-color)', backgroundColor: 'var(--bg-tertiary)' }}>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Usage</h3>
+            <div className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <p><strong>Basic:</strong></p>
+              <code className="block p-2 rounded text-xs" style={{ backgroundColor: 'var(--bg-primary)' }}>
+                {'<Shimmer text="Loading..." />'}
+              </code>
+              <p className="mt-3"><strong>With Options:</strong></p>
+              <code className="block p-2 rounded text-xs" style={{ backgroundColor: 'var(--bg-primary)' }}>
+                {'<Shimmer text="Placeholder text" size="lg" speed={3} />'}
+              </code>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -358,6 +358,16 @@
     }
   }
 
+  /* Shimmer text animation */
+  @keyframes shimmer-text {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
   .skeleton-box {
     background: linear-gradient(
       90deg,
