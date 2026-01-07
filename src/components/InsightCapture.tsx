@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { PersonSelectionModal } from './people/PersonSelectionModal';
 import { AddPersonModal } from './people/AddPersonModal';
 import { PersonWithNote } from '@/lib/supabase/people';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
+import { useTouchDevice } from '@/hooks/useTouchDevice';
 
 const MAX_LENGTH = 144;
 
@@ -17,6 +18,8 @@ export function InsightCapture() {
   const [showAddPersonModal, setShowAddPersonModal] = useState(false);
   const [people, setPeople] = useState<PersonWithNote[]>([]);
   const [pendingNoteContent, setPendingNoteContent] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isTouchDevice = useTouchDevice();
 
   // Extract person ID from pathname if on person detail page
   const personIdMatch = pathname.match(/^\/people\/([^/]+)$/);
@@ -28,6 +31,10 @@ export function InsightCapture() {
   // Fetch people list when modal opens
   useEffect(() => {
     if (showPersonModal) {
+      // Blur input on touch devices when modal opens to dismiss keyboard
+      if (isTouchDevice && inputRef.current) {
+        inputRef.current.blur();
+      }
       fetch('/api/people')
         .then((res) => res.json())
         .then((data) => {
@@ -39,7 +46,7 @@ export function InsightCapture() {
           console.error('Error fetching people:', error);
         });
     }
-  }, [showPersonModal]);
+  }, [showPersonModal, isTouchDevice]);
 
   // Fetch current person data if on person page (for placeholder)
   const [currentPerson, setCurrentPerson] = useState<{ name: string } | null>(null);
@@ -63,6 +70,11 @@ export function InsightCapture() {
 
   const handleSubmit = async () => {
     if (!content.trim() || content.length > MAX_LENGTH) return;
+
+    // Blur input on touch devices to dismiss keyboard
+    if (isTouchDevice && inputRef.current) {
+      inputRef.current.blur();
+    }
 
     // If on person detail page, submit directly
     if (currentPersonId) {
@@ -180,6 +192,7 @@ export function InsightCapture() {
               >
                 <div className="flex-1 relative">
                   <input
+                    ref={inputRef}
                     type="text"
                     placeholder={placeholder}
                     value={content}
