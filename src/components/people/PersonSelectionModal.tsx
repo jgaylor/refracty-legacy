@@ -281,7 +281,6 @@ export function PersonSelectionModal({
   };
 
   const containerStyles = {
-    backgroundColor: 'var(--bg-primary)',
     ...getContainerStyles(),
   };
 
