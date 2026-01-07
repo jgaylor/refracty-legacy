@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { IconButton } from '../IconButton';
 import { useRouter } from 'next/navigation';
 import { Note } from '@/lib/supabase/people';
-import { InsightCategory } from '@/lib/supabase/insights';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
-import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 interface NotesTabProps {
   personId: string;
@@ -14,29 +12,10 @@ interface NotesTabProps {
   onNotesChange?: (count: number) => void;
 }
 
-const CATEGORY_LABELS: Record<InsightCategory, string> = {
-  motivated_by: 'Motivated by',
-  preferred_communication: 'Preferred communication',
-  works_best_when: 'Works best when',
-  collaboration_style: 'Collaboration style',
-  feedback_approach: 'Feedback approach',
-};
-
-const ALL_CATEGORIES: InsightCategory[] = [
-  'motivated_by',
-  'preferred_communication',
-  'works_best_when',
-  'collaboration_style',
-  'feedback_approach',
-];
-
 export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProps) {
   const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [loading, setLoading] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [moveToMenuId, setMoveToMenuId] = useState<string | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const submenuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   // Sync notes with initialNotes when it changes, but preserve optimistic updates
@@ -68,55 +47,27 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
     return `${month}/${day}/${year} at ${hours}:${minutesStr} ${ampm}`;
   };
 
-  const handleMoveToInsight = async (noteId: string, category: InsightCategory) => {
-    setLoading(true);
-    setOpenMenuId(null);
-    setMoveToMenuId(null);
-    try {
-      const response = await fetch(`/api/people/${personId}/notes/${noteId}/move-to-insight`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ category }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        // Remove note from list
-        setNotes((prev) => {
-          const updated = prev.filter((note) => note.id !== noteId);
-          onNotesChange?.(updated.length);
-          return updated;
-        });
-        showSuccessToast('Note moved to insight', {
-          href: `/people/${personId}`,
-          text: 'View person',
-        });
-        router.refresh();
-      } else {
-        throw new Error(result.error || 'Failed to move note to insight');
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('[aria-label="Note menu"]') && !target.closest('[data-menu-dropdown]')) {
+        setOpenMenuId(null);
       }
-    } catch (error) {
-      console.error('Error moving note to insight:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to move note to insight';
-      showErrorToast(errorMessage);
-    } finally {
-      setLoading(false);
+    };
+
+    if (openMenuId) {
+      document.addEventListener('mousedown', handleClickOutside);
     }
-  };
 
-  const handleDeleteNoteClick = (noteId: string) => {
-    setOpenMenuId(null);
-    setDeleteConfirm(noteId);
-  };
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openMenuId]);
 
-  const handleDeleteNote = async () => {
-    if (!deleteConfirm) return;
-
-    const noteId = deleteConfirm;
+  const handleDeleteNote = async (noteId: string) => {
     setLoading(true);
+    setOpenMenuId(null);
     try {
       const response = await fetch(`/api/people/${personId}/notes/${noteId}`, {
         method: 'DELETE',
@@ -132,7 +83,6 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
           return updated;
         });
         showSuccessToast('Note deleted');
-        setDeleteConfirm(null);
         router.refresh();
       } else {
         throw new Error(result.error || 'Failed to delete note');
@@ -204,95 +154,20 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
                         className="fixed inset-0 z-45"
                         onClick={() => {
                           setOpenMenuId(null);
-                          setMoveToMenuId(null);
                         }}
                       />
                       <div
+                        data-menu-dropdown
                         className="absolute right-0 mt-1 w-56 rounded-md shadow-lg z-50 border"
                         style={{
                           backgroundColor: 'var(--bg-primary)',
                           borderColor: 'var(--border-color)',
                         }}
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <div className="py-1">
-                          {/* Move to... parent item */}
-                          <div className="relative">
-                            <button
-                              onClick={() => setMoveToMenuId(moveToMenuId === note.id ? null : note.id)}
-                              disabled={loading}
-                              className="w-full text-left px-4 py-2 text-sm hover:bg-opacity-50 transition-colors disabled:opacity-50 flex items-center justify-between"
-                              style={{
-                                color: 'var(--text-primary)',
-                                backgroundColor: moveToMenuId === note.id ? 'var(--bg-tertiary)' : 'transparent',
-                              }}
-                              onMouseEnter={(e) => {
-                                if (moveToMenuId !== note.id) {
-                                  e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                                }
-                              }}
-                              onMouseLeave={(e) => {
-                                if (moveToMenuId !== note.id) {
-                                  e.currentTarget.style.backgroundColor = 'transparent';
-                                }
-                              }}
-                            >
-                              <span>Move to...</span>
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                style={{
-                                  transform: moveToMenuId === note.id ? 'rotate(90deg)' : 'rotate(0deg)',
-                                  transition: 'transform 0.2s',
-                                }}
-                              >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </button>
-
-                            {/* Submenu for categories - Inline vertical expansion */}
-                            {moveToMenuId === note.id && (
-                              <div
-                                ref={submenuRef}
-                                className="w-full border-t"
-                                style={{
-                                  borderColor: 'var(--border-color)',
-                                }}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <div className="py-1">
-                                  {ALL_CATEGORIES.map((category) => (
-                                    <button
-                                      key={category}
-                                      onClick={() => handleMoveToInsight(note.id, category)}
-                                      disabled={loading}
-                                      className="w-full text-left px-4 py-2 text-sm hover:bg-opacity-50 transition-colors disabled:opacity-50"
-                                      style={{
-                                        color: 'var(--text-primary)',
-                                        backgroundColor: 'transparent',
-                                      }}
-                                      onMouseEnter={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'transparent';
-                                      }}
-                                    >
-                                      {CATEGORY_LABELS[category]}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          <div
-                            className="my-1"
-                            style={{ borderColor: 'var(--border-color)', borderTopWidth: '1px' }}
-                          />
                           <button
-                            onClick={() => handleDeleteNoteClick(note.id)}
+                            onClick={() => handleDeleteNote(note.id)}
                             disabled={loading}
                             className="w-full text-left px-4 py-2 text-sm hover:bg-opacity-50 transition-colors disabled:opacity-50 text-red-600"
                             onMouseEnter={(e) => {
@@ -314,17 +189,6 @@ export function NotesTab({ personId, initialNotes, onNotesChange }: NotesTabProp
           ))}
         </div>
       )}
-
-      <ConfirmDialog
-        isOpen={!!deleteConfirm}
-        title="Delete Note"
-        message="Are you sure you want to delete this note? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
-        variant="danger"
-        onConfirm={handleDeleteNote}
-        onCancel={() => setDeleteConfirm(null)}
-      />
     </div>
   );
 }

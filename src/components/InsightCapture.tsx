@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { PersonSelectionModal } from './people/PersonSelectionModal';
 import { AddPersonModal } from './people/AddPersonModal';
 import { PersonWithNote } from '@/lib/supabase/people';
@@ -11,7 +11,6 @@ const MAX_LENGTH = 144;
 
 export function InsightCapture() {
   const pathname = usePathname();
-  const router = useRouter();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPersonModal, setShowPersonModal] = useState(false);
@@ -90,11 +89,15 @@ export function InsightCapture() {
       if (response.ok && result.success) {
         setContent('');
         
-        // Show success toast with link to person page
-        showSuccessToast('Note captured', {
-          href: `/people/${personId}`,
-          text: 'View person',
-        });
+        // Show success toast with link to person page (only if not already on person page)
+        if (currentPersonId === personId) {
+          showSuccessToast('Note captured');
+        } else {
+          showSuccessToast('Note captured', {
+            href: `/people/${personId}`,
+            text: 'View person',
+          });
+        }
         
         // Dispatch custom event to update notes card if on person detail page
         if (currentPersonId === personId && result.note) {
@@ -209,9 +212,6 @@ export function InsightCapture() {
                   </svg>
                 </button>
               </form>
-              <p className="text-xs mt-2 text-center" style={{ color: 'var(--text-tertiary)' }}>
-                One idea per note keeps things clearer later.
-              </p>
             </div>
           </div>
         </div>

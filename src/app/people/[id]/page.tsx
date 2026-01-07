@@ -1,6 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
 import { getPersonById, getNotesByPerson } from '@/lib/supabase/people';
-import { getInsightsByPerson } from '@/lib/supabase/insights';
 import { PersonDetailClient } from '@/components/people/PersonDetailClient';
 import { PersonDetailSkeleton } from '@/components/people/PersonDetailSkeleton';
 import { getUser } from '@/lib/supabase/auth';
@@ -19,16 +18,12 @@ async function PersonDetailContent({ id }: { id: string }) {
     notFound();
   }
 
-  // Fetch insights and notes in parallel
-  const [insights, notes] = await Promise.all([
-    getInsightsByPerson(id),
-    getNotesByPerson(id),
-  ]);
+  // Fetch notes
+  const notes = await getNotesByPerson(id);
 
   return (
     <PersonDetailClient
       person={person}
-      initialInsights={insights}
       initialNotes={notes}
     />
   );

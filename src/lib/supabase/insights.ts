@@ -110,7 +110,7 @@ export type FeedItem =
   | ({ type: 'note' } & NoteWithPerson);
 
 /**
- * Get all notes and insights for the current user with pagination, combined and sorted
+ * Get all notes for the current user with pagination, sorted by most recent first
  */
 export async function getAllNotesAndInsights(
   limit: number = 20,
@@ -123,19 +123,6 @@ export async function getAllNotesAndInsights(
 
   const supabase = await createClient();
   
-  // Fetch insights with person data
-  const { data: insightsData, error: insightsError } = await supabase
-    .from('insights')
-    .select(`
-      *,
-      people (
-        id,
-        name
-      )
-    `)
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
-
   // Fetch notes with person data
   const { data: notesData, error: notesError } = await supabase
     .from('notes')
@@ -147,24 +134,22 @@ export async function getAllNotesAndInsights(
       )
     `)
     .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
 
-  if (insightsError || notesError) {
-    console.error('Error fetching feed items:', insightsError || notesError);
+  if (notesError) {
+    console.error('Error fetching feed items:', notesError);
     return { items: [], hasMore: false };
   }
 
-  // Transform insights
-  const insights: FeedItem[] = (insightsData || []).map((item: any) => {
-    const personData = Array.isArray(item.people) ? item.people[0] : item.people;
-    return {
-      type: 'insight' as const,
-      ...item,
-      person: personData 
-        ? { id: personData.id, name: personData.name }
-        : { id: item.person_id, name: 'Unknown' },
-    };
-  });
+  // Check if there are more notes
+  const { count } = await supabase
+    .from('notes')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id);
+
+  const totalCount = count || 0;
+  const hasMore = offset + limit < totalCount;
 
   // Transform notes
   const notes: FeedItem[] = (notesData || []).map((item: any) => {
@@ -178,18 +163,7 @@ export async function getAllNotesAndInsights(
     };
   });
 
-  // Combine and sort by created_at descending
-  const allItems = [...insights, ...notes].sort((a, b) => {
-    const dateA = new Date(a.created_at).getTime();
-    const dateB = new Date(b.created_at).getTime();
-    return dateB - dateA; // Descending
-  });
-
-  // Apply pagination
-  const paginatedItems = allItems.slice(offset, offset + limit);
-  const hasMore = offset + limit < allItems.length;
-
-  return { items: paginatedItems, hasMore };
+  return { items: notes, hasMore };
 }
 
 /**

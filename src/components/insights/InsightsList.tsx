@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FeedItem, InsightCategory } from '@/lib/supabase/insights';
+import { FeedItem } from '@/lib/supabase/insights';
 import { InsightsListSkeleton } from './InsightsListSkeleton';
 import { IconButton } from '../IconButton';
 import { ConfirmDialog } from '../ConfirmDialog';
@@ -13,22 +13,6 @@ interface InsightsListProps {
   initialItems: FeedItem[];
   initialHasMore: boolean;
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  motivated_by: 'Motivated by',
-  preferred_communication: 'Preferred communication',
-  works_best_when: 'Works best when',
-  collaboration_style: 'Collaboration style',
-  feedback_approach: 'Feedback approach',
-};
-
-const ALL_CATEGORIES: InsightCategory[] = [
-  'motivated_by',
-  'preferred_communication',
-  'works_best_when',
-  'collaboration_style',
-  'feedback_approach',
-];
 
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);
@@ -74,9 +58,7 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [moveToMenuId, setMoveToMenuId] = useState<string | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; type: 'note' | 'insight' } | null>(null);
-  const submenuRef = useRef<HTMLDivElement>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const observerTarget = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -126,13 +108,9 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (submenuRef.current && !submenuRef.current.contains(event.target as Node)) {
-        // Don't close if clicking on menu button
-        const target = event.target as HTMLElement;
-        if (!target.closest('[aria-label="Item menu"]')) {
-          setOpenMenuId(null);
-          setMoveToMenuId(null);
-        }
+      const target = event.target as HTMLElement;
+      if (!target.closest('[aria-label="Item menu"]') && !target.closest('[data-menu-dropdown]')) {
+        setOpenMenuId(null);
       }
     };
 
@@ -145,118 +123,38 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
     };
   }, [openMenuId]);
 
-  const handleDeleteClick = (item: FeedItem) => {
-    setOpenMenuId(null);
-    setDeleteConfirm({ id: item.id, type: item.type });
+  const handleDeleteClick = (noteId: string) => {
+    setDeleteConfirm(noteId);
   };
 
   const handleDelete = async () => {
     if (!deleteConfirm) return;
 
-    const { id, type } = deleteConfirm;
+    const noteId = deleteConfirm;
     setLoading(true);
     try {
       // Find the item to get person_id
-      const item = items.find((i) => i.id === id);
-      if (!item) return;
+      const item = items.find((i) => i.id === noteId);
+      if (!item || item.type !== 'note') return;
 
-      const endpoint = type === 'note'
-        ? `/api/people/${item.person.id}/notes/${id}`
-        : `/api/people/${item.person.id}/insights/${id}`;
-
-      const response = await fetch(endpoint, {
+      const response = await fetch(`/api/people/${item.person.id}/notes/${noteId}`, {
         method: 'DELETE',
       });
 
       const result = await response.json();
 
       if (response.ok && result.success) {
-        setItems((prev) => prev.filter((item) => item.id !== id));
-        showSuccessToast(type === 'note' ? 'Note deleted' : 'Insight deleted');
-        setDeleteConfirm(null);
-        router.refresh();
-      } else {
-        throw new Error(result.error || `Failed to delete ${type}`);
-      }
-    } catch (error) {
-      console.error(`Error deleting ${deleteConfirm.type}:`, error);
-      const errorMessage = error instanceof Error ? error.message : `Failed to delete ${deleteConfirm.type}`;
-      showErrorToast(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMoveToInsight = async (noteId: string, category: InsightCategory) => {
-    const item = items.find((i) => i.id === noteId && i.type === 'note');
-    if (!item) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/people/${item.person.id}/notes/${noteId}/move-to-insight`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ category }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        // Remove note from list (it's now an insight)
         setItems((prev) => prev.filter((item) => item.id !== noteId));
-        showSuccessToast('Note converted to insight');
-        setMoveToMenuId(null);
+        showSuccessToast('Note deleted');
+        setDeleteConfirm(null);
         setOpenMenuId(null);
         router.refresh();
       } else {
-        throw new Error(result.error || 'Failed to convert note to insight');
+        throw new Error(result.error || 'Failed to delete note');
       }
     } catch (error) {
-      console.error('Error converting note to insight:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to convert note to insight';
-      showErrorToast(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMoveCategory = async (insightId: string, category: InsightCategory) => {
-    const item = items.find((i) => i.id === insightId && i.type === 'insight');
-    if (!item) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/people/${item.person.id}/insights/${insightId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ category }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        // Update item in place with new category
-        setItems((prev) =>
-          prev.map((i) =>
-            i.id === insightId && i.type === 'insight'
-              ? { ...i, category }
-              : i
-          )
-        );
-        showSuccessToast('Insight recategorized');
-        setMoveToMenuId(null);
-        setOpenMenuId(null);
-        router.refresh();
-      } else {
-        throw new Error(result.error || 'Failed to recategorize insight');
-      }
-    } catch (error) {
-      console.error('Error recategorizing insight:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to recategorize insight';
+      console.error('Error deleting note:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete note';
       showErrorToast(errorMessage);
     } finally {
       setLoading(false);
@@ -270,7 +168,7 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
           No items yet
         </p>
         <p className="text-sm mt-2" style={{ color: 'var(--text-tertiary)' }}>
-          Start capturing notes and insights about people to see them here
+          Start capturing notes about people to see them here
         </p>
       </div>
     );
@@ -296,7 +194,7 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                {/* Primary: Note/Insight Content */}
+                {/* Primary: Note Content */}
                 <p className="text-base font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
                   {item.content}
                 </p>
@@ -310,14 +208,6 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
                   >
                     {item.person.name}
                   </Link>
-                  <span className="text-xs px-2 py-0.5 rounded" style={{ 
-                    backgroundColor: 'var(--bg-tertiary)',
-                    color: 'var(--text-secondary)',
-                  }}>
-                    {item.type === 'insight' 
-                      ? (CATEGORY_LABELS[item.category] || item.category)
-                      : 'Note'}
-                  </span>
                   <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
                     {formatRelativeTime(item.created_at)}
                   </span>
@@ -346,110 +236,21 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
                       className="fixed inset-0 z-45"
                       onClick={() => {
                         setOpenMenuId(null);
-                        setMoveToMenuId(null);
                       }}
                     />
                     <div
+                      data-menu-dropdown
                       className="absolute right-0 mt-1 w-56 rounded-md shadow-lg z-50 border"
                       style={{
                         backgroundColor: 'var(--bg-primary)',
                         borderColor: 'var(--border-color)',
                       }}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <div className="py-1">
-                        {/* Move to... (for both notes and insights) */}
-                        <div className="relative">
-                          <button
-                            onClick={() => setMoveToMenuId(moveToMenuId === item.id ? null : item.id)}
-                            disabled={loading}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-tertiary transition-colors disabled:opacity-50 flex items-center justify-between"
-                            style={{
-                              color: 'var(--text-primary)',
-                              backgroundColor: moveToMenuId === item.id ? 'var(--bg-tertiary)' : 'transparent',
-                            }}
-                            onMouseEnter={(e) => {
-                              if (moveToMenuId !== item.id) {
-                                e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                              }
-                            }}
-                            onMouseLeave={(e) => {
-                              if (moveToMenuId !== item.id) {
-                                e.currentTarget.style.backgroundColor = 'transparent';
-                              }
-                            }}
-                          >
-                            <span>Move to...</span>
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              style={{
-                                transform: moveToMenuId === item.id ? 'rotate(90deg)' : 'rotate(0deg)',
-                                transition: 'transform 0.2s',
-                              }}
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </button>
-
-                          {/* Submenu for categories - Inline vertical expansion */}
-                          {moveToMenuId === item.id && (
-                            <div
-                              ref={submenuRef}
-                              className="w-full border-t"
-                              style={{
-                                borderColor: 'var(--border-color)',
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="py-1">
-                                {ALL_CATEGORIES.map((category) => {
-                                  // For insights, skip the current category
-                                  if (item.type === 'insight' && item.category === category) {
-                                    return null;
-                                  }
-                                  return (
-                                    <button
-                                      key={category}
-                                      onClick={() => {
-                                        if (item.type === 'note') {
-                                          handleMoveToInsight(item.id, category);
-                                        } else {
-                                          handleMoveCategory(item.id, category);
-                                        }
-                                      }}
-                                      disabled={loading}
-                                      className="w-full text-left px-4 py-2 text-sm hover:bg-tertiary transition-colors disabled:opacity-50"
-                                      style={{
-                                        color: 'var(--text-primary)',
-                                        backgroundColor: 'transparent',
-                                      }}
-                                      onMouseEnter={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)';
-                                      }}
-                                      onMouseLeave={(e) => {
-                                        e.currentTarget.style.backgroundColor = 'transparent';
-                                      }}
-                                    >
-                                      {CATEGORY_LABELS[category]}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Divider */}
-                        <div
-                          className="my-1"
-                          style={{ borderColor: 'var(--border-color)', borderTopWidth: '1px' }}
-                        />
-
                         {/* Delete */}
                         <button
-                          onClick={() => handleDeleteClick(item)}
+                          onClick={() => handleDeleteClick(item.id)}
                           disabled={loading}
                           className="w-full text-left px-4 py-2 text-sm hover:bg-tertiary transition-colors disabled:opacity-50"
                           style={{
@@ -463,7 +264,7 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
                             e.currentTarget.style.backgroundColor = 'transparent';
                           }}
                         >
-                          Delete {item.type === 'note' ? 'note' : 'insight'}
+                          Delete note
                         </button>
                       </div>
                     </div>
@@ -494,13 +295,16 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         isOpen={!!deleteConfirm}
-        title={`Delete ${deleteConfirm?.type === 'note' ? 'Note' : 'Insight'}`}
-        message={deleteConfirm ? `Are you sure you want to delete this ${deleteConfirm.type}? This action cannot be undone.` : ''}
+        title="Delete Note"
+        message="Are you sure you want to delete this note? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         variant="danger"
         onConfirm={handleDelete}
-        onCancel={() => setDeleteConfirm(null)}
+        onCancel={() => {
+          setDeleteConfirm(null);
+          setOpenMenuId(null);
+        }}
       />
     </div>
   );

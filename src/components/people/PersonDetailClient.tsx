@@ -3,26 +3,29 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Person, Note } from '@/lib/supabase/people';
-import { Insight } from '@/lib/supabase/insights';
 import { PersonHeader } from './PersonHeader';
-import { InsightsTab } from './InsightsTab';
+import { PersonDetailsCard } from './PersonDetailsCard';
 import { ExpandableNotesCard } from './ExpandableNotesCard';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
 import { useMobileHeader } from '@/components/MobileHeaderProvider';
 
 interface PersonDetailClientProps {
   person: Person;
-  initialInsights: Insight[];
   initialNotes: Note[];
 }
 
 export function PersonDetailClient({
   person,
-  initialInsights,
   initialNotes,
 }: PersonDetailClientProps) {
   const router = useRouter();
   const { setConfig } = useMobileHeader();
+  const [notesCount, setNotesCount] = useState(initialNotes.length);
+
+  // Sync notesCount when initialNotes changes (e.g., after page refresh)
+  useEffect(() => {
+    setNotesCount(initialNotes.length);
+  }, [initialNotes.length]);
 
   const handleDelete = useCallback(async () => {
     try {
@@ -65,19 +68,18 @@ export function PersonDetailClient({
   }, [person.name, setConfig, handleDelete]);
 
   return (
-    <div>
+    <div className="space-y-6">
       <PersonHeader person={person} onDelete={handleDelete} />
 
-      {/* Expandable Notes Card */}
-      <div className="mb-6">
-        <ExpandableNotesCard
-          personId={person.id}
-          initialNotes={initialNotes}
-        />
-      </div>
+      {/* Person Details Card */}
+      <PersonDetailsCard personId={person.id} notesCount={notesCount} />
 
-      {/* Insights Content */}
-      <InsightsTab personId={person.id} initialInsights={initialInsights} />
+      {/* Notes Card */}
+      <ExpandableNotesCard
+        personId={person.id}
+        initialNotes={initialNotes}
+        onNotesChange={setNotesCount}
+      />
     </div>
   );
 }
