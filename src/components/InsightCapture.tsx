@@ -17,6 +17,7 @@ export function InsightCapture() {
   const [showPersonModal, setShowPersonModal] = useState(false);
   const [showAddPersonModal, setShowAddPersonModal] = useState(false);
   const [people, setPeople] = useState<PersonWithNote[]>([]);
+  const [isLoadingPeople, setIsLoadingPeople] = useState(false);
   const [pendingNoteContent, setPendingNoteContent] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isTouchDevice = useTouchDevice();
@@ -35,6 +36,7 @@ export function InsightCapture() {
       if (isTouchDevice && inputRef.current) {
         inputRef.current.blur();
       }
+      setIsLoadingPeople(true);
       fetch('/api/people')
         .then((res) => res.json())
         .then((data) => {
@@ -44,7 +46,12 @@ export function InsightCapture() {
         })
         .catch((error) => {
           console.error('Error fetching people:', error);
+        })
+        .finally(() => {
+          setIsLoadingPeople(false);
         });
+    } else {
+      setIsLoadingPeople(false);
     }
   }, [showPersonModal, isTouchDevice]);
 
@@ -237,6 +244,7 @@ export function InsightCapture() {
         onSelect={handlePersonSelect}
         people={people}
         onAddPerson={handleAddPersonClick}
+        isLoading={isLoadingPeople}
       />
 
       {/* Add Person Modal */}

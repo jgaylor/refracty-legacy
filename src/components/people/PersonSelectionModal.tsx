@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { IconButton } from '../IconButton';
 import { PersonWithNote } from '@/lib/supabase/people';
 import { useTouchDevice } from '@/hooks/useTouchDevice';
+import { SkeletonAvatar, SkeletonText } from '../skeletons/SkeletonComponents';
 
 interface PersonSelectionModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface PersonSelectionModalProps {
   onSelect: (personId: string) => void;
   people: PersonWithNote[];
   onAddPerson?: () => void;
+  isLoading?: boolean;
 }
 
 export function PersonSelectionModal({
@@ -20,12 +22,14 @@ export function PersonSelectionModal({
   onSelect,
   people,
   onAddPerson,
+  isLoading: isLoadingProp,
 }: PersonSelectionModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [viewportHeight, setViewportHeight] = useState<number | null>(null);
+  const [modalOpenTime, setModalOpenTime] = useState<number | null>(null);
   const isTouchDevice = useTouchDevice();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
@@ -97,8 +101,14 @@ export function PersonSelectionModal({
       setFocusedIndex(-1);
       setIsSearchFocused(false);
       listItemRefs.current = [];
+      setModalOpenTime(Date.now());
+    } else {
+      setModalOpenTime(null);
     }
   }, [isOpen]);
+
+  // Determine if we should show loading state
+  const isLoading = isLoadingProp ?? (people.length === 0 && modalOpenTime !== null && Date.now() - modalOpenTime < 3000);
 
   // Track visual viewport height for iOS keyboard handling
   useEffect(() => {
@@ -273,7 +283,7 @@ export function PersonSelectionModal({
     ? `w-full flex flex-col transition-transform duration-300 ease-out ${
         isAnimating ? 'translate-y-0' : 'translate-y-full'
       }`
-    : `w-full max-w-md rounded-lg shadow-lg flex flex-col max-h-[80dvh]`;
+    : `w-full max-w-md rounded-lg shadow-lg flex flex-col max-h-[80dvh] min-h-[500px]`;
 
   const overlayStyles = {
     backgroundColor: isBottomSheet ? 'transparent' : 'rgba(0, 0, 0, 0.5)',
@@ -313,7 +323,7 @@ export function PersonSelectionModal({
           }}
         >
           <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-            Choose a person
+            Who is this about?
           </span>
           <IconButton onClick={onClose} size="sm" aria-label="Close person picker">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -378,7 +388,21 @@ export function PersonSelectionModal({
 
         {/* Scrollable People List */}
         <div className="flex-1 overflow-y-auto min-h-0">
-          {people.length === 0 ? (
+          {isLoading ? (
+            <div className="py-1" role="status" aria-label="Loading people">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="w-full px-4 py-2.5 flex items-center gap-3 min-h-[44px]"
+                >
+                  {/* Avatar skeleton */}
+                  <SkeletonAvatar size={32} />
+                  {/* Name skeleton */}
+                  <SkeletonText width={index % 3 === 0 ? '60%' : index % 3 === 1 ? '70%' : '55%'} height="0.875rem" />
+                </div>
+              ))}
+            </div>
+          ) : people.length === 0 ? (
             <div className="text-center py-8 px-4">
               <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
                 No people yet. Add someone to get started.
