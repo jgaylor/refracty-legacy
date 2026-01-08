@@ -20,7 +20,7 @@
     --scrollbar-width: 16px;
     /* Button Primary Colors - Light Mode */
     --button-primary-bg: #212121;
-    --button-primary-text: #ffffff;
+    --button-primary-text: #e5e5e5;
     --button-primary-hover: #1a1a1a;
     --button-primary-focus: rgba(33, 33, 33, 0.5);
   }
@@ -40,10 +40,10 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
     --link-color: #60a5fa;
     /* Button Primary Colors - Dark Mode (reversed) */
-    --button-primary-bg: #ffffff;
+    --button-primary-bg: #a3a3a3;
     --button-primary-text: #212121;
-    --button-primary-hover: #e5e5e5;
-    --button-primary-focus: rgba(255, 255, 255, 0.5);
+    --button-primary-hover: #949494;
+    --button-primary-focus: rgba(163, 163, 163, 0.5);
   }
 
   /* Safari backdrop-blur fix - makes background more opaque */
