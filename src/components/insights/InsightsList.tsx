@@ -4,10 +4,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FeedItem } from '@/lib/supabase/insights';
-import { InsightsListSkeleton } from './InsightsListSkeleton';
 import { ConfirmDialog } from '../ConfirmDialog';
 import { showSuccessToast, showErrorToast } from '@/lib/toast';
 import { NoteItem } from '../people/NoteItem';
+import { SkeletonText } from '../skeletons/SkeletonComponents';
 
 interface InsightsListProps {
   initialItems: FeedItem[];
@@ -262,13 +262,49 @@ export function InsightsList({ initialItems, initialHasMore }: InsightsListProps
             </div>
           );
         })}
-      </div>
 
-      {loading && (
-        <div className="mt-4">
-          <InsightsListSkeleton count={3} />
-        </div>
-      )}
+        {/* Skeleton loaders integrated into the same card */}
+        {loading && Array.from({ length: 3 }).map((_, skeletonIndex) => {
+          const hasItemsBefore = items.length > 0;
+          const hasSkeletonsBefore = skeletonIndex > 0;
+          const needsBorderTop = hasItemsBefore || hasSkeletonsBefore;
+          
+          return (
+            <div
+              key={`skeleton-${skeletonIndex}`}
+              className={`px-4 py-4 ${needsBorderTop ? 'border-t' : ''}`}
+              style={{
+                borderColor: needsBorderTop ? 'var(--border-color)' : 'transparent',
+              }}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  {/* Primary: Note Content */}
+                  <div className="mb-1">
+                    <SkeletonText width="100%" height="0.875rem" className="mb-1" />
+                    {skeletonIndex % 2 === 0 && (
+                      <SkeletonText width="75%" height="0.875rem" />
+                    )}
+                  </div>
+
+                  {/* Secondary: Metadata */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Person name */}
+                    <SkeletonText width="100px" height="0.75rem" />
+                    {/* Timestamp */}
+                    <SkeletonText width="80px" height="0.75rem" />
+                  </div>
+                </div>
+
+                {/* Menu button skeleton */}
+                <div className="relative flex-shrink-0 self-center">
+                  <SkeletonText width="1.25rem" height="1.25rem" className="rounded" />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {!hasMore && items.length > 0 && (
         <div className="text-center py-4 mt-4">
