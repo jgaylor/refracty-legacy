@@ -5,6 +5,29 @@
 @tailwind utilities;
 
 @layer base {
+  /* interaction baselines */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring, rgba(0, 0, 0, 0.4));
+    outline-offset: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   /* CSS Variables for Theming - Light Mode (default) */
   :root {
     --bg-primary: #ffffff;
