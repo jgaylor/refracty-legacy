@@ -14,6 +14,8 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
+  --tap-target-min: 44px;
+
   /* Radius */
   --radius-none: 0;
   --radius-sm: 0.125rem;

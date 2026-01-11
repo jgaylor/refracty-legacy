@@ -28,6 +28,12 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* hit area */
+  .hitArea {
+    min-height: var(--tap-target-min);
+    min-width: var(--tap-target-min);
+  }
+
   /* CSS Variables for Theming - Light Mode (default) */
   :root {
     --bg-primary: #ffffff;
