@@ -47,3 +47,14 @@
   outline: 2px solid var(--focus-ring, rgba(0,0,0,0.4));
   outline-offset: 2px;
 }
+
+.primary {
+  background: var(--color-blue-600);
+  color: var(--color-white);
+  border-color: var(--color-blue-600);
+}
+
+.secondary {
+  background: var(--bg);
+  color: var(--fg);
+}
