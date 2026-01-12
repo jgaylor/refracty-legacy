@@ -1,2 +1,40 @@
 .root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+
+  padding: var(--space-2, 8px) var(--space-4, 16px);
+  border-radius: var(--radius-md, 6px);
+
+  border: 1px solid var(--border, rgba(0,0,0,0.12));
+  background: var(--bg, #fff);
+  color: var(--fg, #111);
+
+  font: inherit;
+  line-height: 1;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+
+  transition:
+    background-color var(--motion-duration-fast, 150ms) var(--motion-easing-standard, ease),
+    border-color var(--motion-duration-fast, 150ms) var(--motion-easing-standard, ease),
+    transform var(--motion-duration-fast, 150ms) var(--motion-easing-standard, ease);
+}
+
+.root:active {
+  transform: translateY(1px);
+}
+
+.root:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.root[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
