@@ -38,3 +38,12 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.root:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: color-mix(in srgb, var(--bg, #fff) 92%, var(--fg, #111));
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--focus-ring, rgba(0,0,0,0.4));
+  outline-offset: 2px;
+}
