@@ -58,3 +58,17 @@
   background: var(--bg);
   color: var(--fg);
 }
+
+.primary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--color-blue-700);
+  border-color: var(--color-blue-700);
+}
+
+.primary:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--color-blue-800);
+  border-color: var(--color-blue-800);
+}
+
+.secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background: color-mix(in srgb, var(--bg) 92%, var(--fg));
+}
