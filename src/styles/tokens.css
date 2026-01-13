@@ -118,4 +118,9 @@
   --color-green-700: #15803d;
   --color-green-800: #166534;
   --color-green-900: #14532d;
+
+  /* Disabled state colors */
+  --color-surface-disabled: #c3d4f8;
+  --color-text-disabled: #5f7fc4;
+  --color-border-disabled: #9bb6ee;
 }
